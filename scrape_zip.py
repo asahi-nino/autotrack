@@ -1,11 +1,12 @@
 import requests
 from lxml import html
 
-USERNAME = "alex.nino@cmsd.k12.ms.us"
+# Not sure about the values for this
+USERNAME = "<USER NAME>"
 PASSWORD = "<PASSWORD>"
 
 LOGIN_URL = "https://www.zipgrade.com/login"
-URL = "https://bitbucket.org/dashboard/repositories"
+URL = "https://www.zipgrade.com/tags/"
 
 def main():
     session_requests = requests.session()
@@ -24,9 +25,18 @@ def main():
 
     # Perform login
     result = session_requests.post(LOGIN_URL, data = payload, headers = dict(referer = LOGIN_URL))
+    
+    # validate results
+    result.ok # Will tell us if the last request was ok
+    result.status_code # Will give us the status from the last request
 
     # Scrape url
     result = session_requests.get(URL, headers = dict(referer = URL))
+    
+    # validate results
+    result.ok # Will tell us if the last request was ok
+    result.status_code # Will give us the status from the last request
+    
     tree = html.fromstring(result.content)
     bucket_names = tree.xpath("//div[@class='repo-list--repo']/a/text()")
 
